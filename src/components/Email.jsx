@@ -5,7 +5,7 @@ function Email({email, index, toggleRead, toggleStar, setCurrentSelectedEmail}) 
     function setCurrentEmailWrapper(e, email)
     {
         // Prevent opening mail when user click on star or mark as read..
-        if(e.target == e.currentTarget  && e.target.onclick != null)
+        if(e.target == e.currentTarget  || e.target.tagName != 'INPUT')
             setCurrentSelectedEmail(email);
     }
         
