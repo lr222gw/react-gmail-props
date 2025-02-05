@@ -5,16 +5,23 @@ import initialEmails from './data/emails'
 import './styles/App.css'
 
 import DisplayEmail from './components/DisplayEmail'
-// import Emails from './components/Emails'
 
 const getReadEmails = emails => emails.filter(email => !email.read)
 
 const getStarredEmails = emails => emails.filter(email => email.starred)
 
+const searchEmails = (searchStr, emails) => 
+  emails.filter(
+    email => 
+      email.title.toLowerCase().includes(searchStr.toLowerCase())
+      || email.sender.toLowerCase().includes(searchStr.toLowerCase())
+  );
+
 function App() {
   const [emails, setEmails] = useState(initialEmails)
   const [hideRead, setHideRead] = useState(false)
   const [currentTab, setCurrentTab] = useState('inbox')
+  const [searchTerm, setSeachTerm] = useState("")
   const [currentSelectedEmail, setCurrentSelectedEmail] = useState(null)
 
   const unreadEmails = emails.filter(email => !email.read)
@@ -38,15 +45,15 @@ function App() {
     setEmails(updatedEmails)
   }
 
-  // const selectedEmail = 
-
-  let filteredEmails = emails
-
+  var filteredEmails = emails;
   if (hideRead) filteredEmails = getReadEmails(filteredEmails)
 
   if (currentTab === 'starred')
     filteredEmails = getStarredEmails(filteredEmails)
-
+  
+  if (searchTerm != "")
+    filteredEmails = searchEmails(searchTerm, filteredEmails);
+  
   return (
     <div className="app">
       <header className="header">
@@ -62,7 +69,9 @@ function App() {
         </div>
 
         <div className="search">
-          <input className="search-bar" placeholder="Search mail" />
+          <input className="search-bar" placeholder="Search mail" 
+            onChange={(c) => setSeachTerm(c.target.value)}
+          />
         </div>
       </header>
       <nav className="left-menu">
